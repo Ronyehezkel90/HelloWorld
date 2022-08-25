@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         val button3 = findViewById<Button>(R.id.button3)
         button3.setOnClickListener {
             val imageView = findViewById<ImageView>(R.id.image_view)
-//            imageView.setImageResource(R.drawable.banana)
+            imageView.setImageResource(R.drawable.banana)
 //            createList()
             createRecyclerView()
         }
