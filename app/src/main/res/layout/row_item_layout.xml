@@ -16,10 +16,10 @@
         android:textSize="20sp" />
 
     <ImageView
-        android:id="@+id/image_view"
+        android:id="@+id/note_image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/banana"
+        android:src="@drawable/camera"
         app:layout_constraintStart_toEndOf="@id/text_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

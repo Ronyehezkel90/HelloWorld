@@ -1,10 +1,8 @@
 package com.ronyehezkel.helloworld
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface NotesDao {
@@ -17,5 +15,14 @@ interface NotesDao {
 
     @Query("Select * from notesTable")
     fun getAllNotes(): LiveData<List<Note>>
+
+    @Update
+    fun updateNote(note: Note)
+
+    fun updateNoteImageUri(note: Note, imagePath: String, imageType: IMAGE_TYPE){
+        note.imagePath = imagePath
+        note.imageType = imageType
+        updateNote(note)
+    }
 
 }
