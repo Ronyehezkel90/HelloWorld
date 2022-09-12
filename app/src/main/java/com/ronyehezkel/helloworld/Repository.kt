@@ -1,10 +1,21 @@
 package com.ronyehezkel.helloworld
 
-import android.app.Application
+import android.content.Context
 import androidx.lifecycle.LiveData
 
-class Repository(application: Application) {
-    private val dao = NotesDatabase.getDatabase(application).getNotesDao()
+class Repository private constructor(applicationContext: Context) {
+    private val dao = NotesDatabase.getDatabase(applicationContext).getNotesDao()
+
+    companion object{
+        private lateinit var instance:Repository
+
+        fun getInstance(context:Context): Repository{
+            if(!::instance.isInitialized){
+                instance = Repository(context)
+            }
+            return instance
+        }
+    }
 
     fun getAllNotesAsLiveData(): LiveData<List<Note>> {
             return dao.getAllNotes()
@@ -15,6 +26,6 @@ class Repository(application: Application) {
     }
 
     fun updateNoteImage(note: Note, uri: String, imageType: IMAGE_TYPE) {
-        dao.updateNoteImageUri(note, uri, imageType)
+        dao.updateNoteImage(note, uri, imageType)
     }
 }

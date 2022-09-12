@@ -19,7 +19,7 @@ interface NotesDao {
     @Update
     fun updateNote(note: Note)
 
-    fun updateNoteImageUri(note: Note, imagePath: String, imageType: IMAGE_TYPE){
+    fun updateNoteImage(note: Note, imagePath: String, imageType: IMAGE_TYPE){
         note.imagePath = imagePath
         note.imageType = imageType
         updateNote(note)
