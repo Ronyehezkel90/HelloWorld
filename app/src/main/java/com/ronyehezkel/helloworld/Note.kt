@@ -3,6 +3,7 @@ package com.ronyehezkel.helloworld
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.sql.Timestamp
 
 enum class IMAGE_TYPE{
     URI, URL
@@ -13,6 +14,7 @@ data class Note(
     @ColumnInfo(name = "description") val description: String,
     @ColumnInfo(name = "image_path") var imagePath: String? = null,
     @ColumnInfo(name = "image_type") var imageType: IMAGE_TYPE? = null,
+    @ColumnInfo(name = "timestamp") var timestamp: Long = System.currentTimeMillis()
 ){
     @PrimaryKey(autoGenerate = true)
     var id = 0

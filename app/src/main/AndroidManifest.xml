@@ -3,7 +3,9 @@
     package="com.ronyehezkel.helloworld"
     android:versionCode="1"
     android:versionName="1.0">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
         android:allowBackup="true"
@@ -13,15 +15,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HelloWorld">
         <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/MyActivity">
+            android:name=".RegistrationActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".NotesActivity"
+            android:exported="false"
+            android:theme="@style/NotesActivity"/>
+
+        <service
+            android:name=".NotesService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>
