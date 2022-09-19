@@ -9,6 +9,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.ronyehezkel.helloworld.model.IMAGE_TYPE
+import com.ronyehezkel.helloworld.model.Note
 
 class MyAdapter(
     private val dataList: ArrayList<Note>,
@@ -37,7 +39,7 @@ class MyAdapter(
         val note = dataList[position]
         holder.textView.text = note.title
         if(note.imageType!=null){
-            if(note.imageType==IMAGE_TYPE.URI){
+            if(note.imageType== IMAGE_TYPE.URI){
                 holder.imageView.setImageURI(Uri.parse(note.imagePath))
             }
             else{

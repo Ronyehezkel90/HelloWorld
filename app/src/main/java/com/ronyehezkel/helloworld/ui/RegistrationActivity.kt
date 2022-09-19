@@ -1,21 +1,24 @@
-package com.ronyehezkel.helloworld
+package com.ronyehezkel.helloworld.ui
 
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import java.util.Calendar.HOUR
+import com.ronyehezkel.helloworld.R
 
 class RegistrationActivity : AppCompatActivity() {
     var isLoginFragment = true
     val userName = "a@a.com"
     val password = "1234"
     lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("Test", "onCreate")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registartion)
         displayLoginFragment()
@@ -23,6 +26,7 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
+        Log.d("Test", "onStart")
         super.onStart()
         sharedPreferences = getSharedPreferences(R.string.app_name.toString(), MODE_PRIVATE)
         calculateLastLogin()
@@ -34,6 +38,16 @@ class RegistrationActivity : AppCompatActivity() {
             val intent = Intent(this, NotesActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    override fun onStop() {
+        Log.d("Test", "onStop")
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("Test", "onDestroy")
     }
 
     private fun setTextViewClickListener() {
@@ -78,7 +92,7 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
     private fun isUserLegit(): Boolean {
-        return findViewById<EditText>(R.id.email_login_tv).text.toString() == userName &&
-                findViewById<EditText>(R.id.password_login_tv).text.toString() == password
+        return findViewById<EditText>(R.id.email_login_et).text.toString() == userName &&
+                findViewById<EditText>(R.id.password_login_et).text.toString() == password
     }
 }

@@ -1,6 +1,5 @@
-package com.ronyehezkel.helloworld
+package com.ronyehezkel.helloworld.model
 
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.room.*
 

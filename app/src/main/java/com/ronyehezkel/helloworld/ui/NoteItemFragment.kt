@@ -1,7 +1,8 @@
-package com.ronyehezkel.helloworld
+package com.ronyehezkel.helloworld.ui
 
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.ronyehezkel.helloworld.R
 
 class NoteItemFragment : Fragment(R.layout.note_item_fragment) {
     override fun onResume() {

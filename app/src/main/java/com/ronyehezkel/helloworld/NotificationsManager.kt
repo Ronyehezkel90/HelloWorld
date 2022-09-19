@@ -8,7 +8,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat.getSystemService
+import com.ronyehezkel.helloworld.model.Note
+import com.ronyehezkel.helloworld.ui.RegistrationActivity
 
 object NotificationsManager {
     val CHANNEL_ID = "CHANNEL_ID"

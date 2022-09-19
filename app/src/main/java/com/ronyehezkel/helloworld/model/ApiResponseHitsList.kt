@@ -1,4 +1,4 @@
-package com.ronyehezkel.helloworld
+package com.ronyehezkel.helloworld.model
 
 import com.google.gson.annotations.SerializedName
 

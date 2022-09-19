@@ -1,9 +1,8 @@
-package com.ronyehezkel.helloworld
+package com.ronyehezkel.helloworld.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.sql.Timestamp
 
 enum class IMAGE_TYPE{
     URI, URL

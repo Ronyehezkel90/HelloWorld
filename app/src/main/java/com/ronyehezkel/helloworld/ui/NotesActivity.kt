@@ -1,17 +1,24 @@
-package com.ronyehezkel.helloworld
+package com.ronyehezkel.helloworld.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.recyclerview.widget.RecyclerView
+import androidx.core.widget.addTextChangedListener
+import com.ronyehezkel.helloworld.*
+import com.ronyehezkel.helloworld.model.Note
+import com.ronyehezkel.helloworld.viewmodel.NotesViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.concurrent.thread
 
 
 class NotesActivity : AppCompatActivity() {
+
+    private val notesViewModel: NotesViewModel by viewModels()
 
     private var chosenNote: Note? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,6 +26,7 @@ class NotesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val serviceIntent = Intent(this, NotesService::class.java)
         ContextCompat.startForegroundService(this, serviceIntent)
+        updateTitleDynamically()
     }
 
     override fun onStart() {
@@ -37,11 +45,11 @@ class NotesActivity : AppCompatActivity() {
     }
 
     private fun createNewNote(): Note {
-        val noteTitle = findViewById<EditText>(R.id.note_title_et).text.toString()
-        val noteDesc = findViewById<EditText>(R.id.note_desc_et).text.toString()
+        val noteTitle = note_title_et.text.toString()
+        val noteDesc = note_desc_et.text.toString()
         val note = Note(noteTitle, noteDesc)
         thread(start = true) {
-            Repository.getInstance(this).addNote(note)
+            notesViewModel.addNote(note)
         }
         return note
     }
@@ -69,13 +77,21 @@ class NotesActivity : AppCompatActivity() {
     }
 
     private fun createRecyclerView() {
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         val adapter = MyAdapter(arrayListOf(), onNoteTitleClick(), onNoteImageClick(), this)
-        recyclerView.adapter = adapter
-        val notesListLiveData = Repository.getInstance(this).getAllNotesAsLiveData()
-        notesListLiveData.observe(this) { notesList ->
+        recycler_view.adapter = adapter
+        notesViewModel.notesListLiveData.observe(this) { notesList ->
             adapter.heyAdapterPleaseUpdateTheView(notesList)
         }
+    }
+
+    private fun updateTitleDynamically() {
+        note_title_et.addTextChangedListener {
+            notesViewModel.currentTitleLiveData.value = note_title_et.text.toString()
+        }
+        notesViewModel.currentTitleLiveData.observe(this) {
+            title_text_view.text = "Youre going to add: $it"
+        }
+
     }
 
 }

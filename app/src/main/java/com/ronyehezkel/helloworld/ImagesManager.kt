@@ -8,6 +8,10 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.ronyehezkel.helloworld.model.ApiResponseHitsList
+import com.ronyehezkel.helloworld.model.IMAGE_TYPE
+import com.ronyehezkel.helloworld.model.Note
+import com.ronyehezkel.helloworld.model.Repository
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

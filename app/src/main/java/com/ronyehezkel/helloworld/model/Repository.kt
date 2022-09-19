@@ -1,4 +1,4 @@
-package com.ronyehezkel.helloworld
+package com.ronyehezkel.helloworld.model
 
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -7,10 +7,10 @@ class Repository private constructor(applicationContext: Context) {
     private val dao = NotesDatabase.getDatabase(applicationContext).getNotesDao()
 
     companion object{
-        private lateinit var instance:Repository
+        private lateinit var instance: Repository
 
-        fun getInstance(context:Context): Repository{
-            if(!::instance.isInitialized){
+        fun getInstance(context:Context): Repository {
+            if(!Companion::instance.isInitialized){
                 instance = Repository(context)
             }
             return instance
