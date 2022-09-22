@@ -81,18 +81,24 @@ class RegistrationActivity : AppCompatActivity() {
 
     fun onStartClick(view: View) {
         if (isUserLegit()) {
-            val editor = sharedPreferences.edit()
-            editor.putLong("LAST_LOGIN", System.currentTimeMillis()).apply()
-            val intent = Intent(this, NotesActivity::class.java)
-            startActivity(intent)
+//            goInApp()
         } else {
             Toast.makeText(this, "Halo Halo you not legit", Toast.LENGTH_LONG).show()
         }
 
     }
 
+    fun goInApp(userName:String) {
+        val editor = sharedPreferences.edit()
+        editor.putLong("LAST_LOGIN", System.currentTimeMillis()).apply()
+        editor.putString("USER_NAME", userName).apply()
+        val intent = Intent(this, NotesActivity::class.java)
+        startActivity(intent)
+    }
+
     private fun isUserLegit(): Boolean {
-        return findViewById<EditText>(R.id.email_login_et).text.toString() == userName &&
-                findViewById<EditText>(R.id.password_login_et).text.toString() == password
+//        return findViewById<EditText>(R.id.email_login_et).text.toString() == userName &&
+//                findViewById<EditText>(R.id.password_login_et).text.toString() == password
+        return true
     }
 }

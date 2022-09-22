@@ -2,6 +2,8 @@ package com.ronyehezkel.helloworld.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -33,6 +35,9 @@ class NotesActivity : AppCompatActivity() {
         super.onStart()
         setButtonClickListener()
         createRecyclerView()
+        val userName =
+            getSharedPreferences(R.string.app_name.toString(), MODE_PRIVATE).getString("USER_NAME", "")
+        title_text_view.text = "Hello " + userName
     }
 
     private fun displayPersonDetailsFragment(note: Note) {
@@ -94,4 +99,17 @@ class NotesActivity : AppCompatActivity() {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return when (item.itemId){
+//            R.id.logout ->{
+//
+//            }
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 }
