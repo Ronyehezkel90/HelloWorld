@@ -12,6 +12,8 @@ import com.ronyehezkel.helloworld.model.ApiResponseHitsList
 import com.ronyehezkel.helloworld.model.IMAGE_TYPE
 import com.ronyehezkel.helloworld.model.Note
 import com.ronyehezkel.helloworld.model.Repository
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -50,9 +52,7 @@ object ImagesManager {
         imageType: IMAGE_TYPE,
         context: Context
     ) {
-        thread(start = true) {
-            Repository.getInstance(context).updateNoteImage(note, imagePath, imageType)
-        }
+        Repository.getInstance(context).updateNoteImage(note, imagePath, imageType)
     }
 
     fun getImageFromApi(note: Note, context: Context) {
@@ -64,30 +64,14 @@ object ImagesManager {
             ) {
                 val apiResponse = response.body()
                 val apiImage = apiResponse!!.imagesList[3]
-                addImageToNote(note, apiImage.imageUrl, IMAGE_TYPE.URL, context)
+                GlobalScope.launch {
+                    addImageToNote(note, apiImage.imageUrl, IMAGE_TYPE.URL, context)
+                }
             }
 
             override fun onFailure(call: Call<ApiResponseHitsList>, t: Throwable) {
                 Log.e("Wrong api response", t.message.toString())
             }
         })
-    }
-
-    fun displayImagesAlertDialog(
-        context: Context,
-        note: Note,
-        getContent: ActivityResultLauncher<Intent>
-    ) {
-        val alertDialogBuilder = AlertDialog.Builder(context)
-        alertDialogBuilder.setTitle("Choose an image")
-        alertDialogBuilder.setMessage("Choose image for ${note.title}")
-        alertDialogBuilder.setNeutralButton("Cancel") { dialogInterface: DialogInterface, i: Int -> }
-        alertDialogBuilder.setPositiveButton("Gallery") { dialogInterface: DialogInterface, i: Int ->
-            getImageFromGallery(note, getContent)
-        }
-        alertDialogBuilder.setNegativeButton("Network") { dialogInterface: DialogInterface, i: Int ->
-            getImageFromApi(note, context)
-        }
-        alertDialogBuilder.show()
     }
 }
