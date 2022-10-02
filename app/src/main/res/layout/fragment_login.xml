@@ -10,7 +10,7 @@
         android:id="@+id/login_title_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login Fragment"
+        android:text="Sign In Manually"
         android:textColor="@color/dark_grey"
         android:textSize="50sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,6 +25,41 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/login_title_tv" />
+
+    <EditText
+        android:id="@+id/password_login_et"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/email_login_et" />
+
+    <EditText
+        android:id="@+id/first_name_login_et"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="First Name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/password_login_et" />
+
+    <EditText
+        android:id="@+id/last_name_login_et"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Last Name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/first_name_login_et" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign In"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/last_name_login_et" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

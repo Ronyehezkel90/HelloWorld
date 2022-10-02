@@ -18,7 +18,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.ronyehezkel.helloworld.Firestore
 import com.ronyehezkel.helloworld.R
+import com.ronyehezkel.helloworld.model.User
 import com.ronyehezkel.helloworld.viewmodel.RegistrationViewModel
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 
@@ -78,7 +80,7 @@ class SignUpFragment : Fragment() {
                 if (it.signInMethods.isNullOrEmpty()) {
                     registerToNotesAppWithFirebase(googleSignInAccount)
                 } else {
-                    getIntoApp(googleSignInAccount.displayName.toString())
+                    getIntoApp(googleSignInAccount)
                 }
             }
             .addOnFailureListener { displayToast("Failed on firebaseAuth.fetchSignInMethodsForEmail") }
@@ -88,7 +90,13 @@ class SignUpFragment : Fragment() {
         val authCredential = GoogleAuthProvider.getCredential(googleSignInAccount.idToken, null)
         firebaseAuth.signInWithCredential(authCredential)
             .addOnSuccessListener {
-                getIntoApp(googleSignInAccount.displayName.toString())
+                val newUser = User(
+                    googleSignInAccount.email!!,
+                    googleSignInAccount.givenName!!,
+                    googleSignInAccount.familyName!!
+                )
+                Firestore.getInstance(requireContext()).addUser(newUser)
+                getIntoApp(googleSignInAccount)
             }
             .addOnFailureListener {
                 displayToast("Please try again later Exception: ${it.message}")
@@ -96,8 +104,8 @@ class SignUpFragment : Fragment() {
     }
 
 
-    private fun getIntoApp(userName: String) {
-        (requireActivity() as RegistrationActivity).goInApp(userName)
+    private fun getIntoApp(googleSignInAccount: GoogleSignInAccount) {
+        (requireActivity() as RegistrationActivity).goInApp(googleSignInAccount)
     }
 
     fun displayToast(text: String) {

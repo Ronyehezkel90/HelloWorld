@@ -6,16 +6,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.ronyehezkel.helloworld.R
+import com.ronyehezkel.helloworld.model.SpManager
+import com.ronyehezkel.helloworld.model.User
 
 class RegistrationActivity : AppCompatActivity() {
     var isLoginFragment = true
     val userName = "a@a.com"
     val password = "1234"
-    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d("Test", "onCreate")
@@ -28,15 +29,18 @@ class RegistrationActivity : AppCompatActivity() {
     override fun onStart() {
         Log.d("Test", "onStart")
         super.onStart()
-        sharedPreferences = getSharedPreferences(R.string.app_name.toString(), MODE_PRIVATE)
         calculateLastLogin()
     }
 
+    private fun openToDoListActivity() {
+        val intent = Intent(this, ToDoListActivity::class.java)
+        startActivity(intent)
+    }
+
     private fun calculateLastLogin() {
-        val lastLogin = sharedPreferences.getLong("LAST_LOGIN", -1)
+        val lastLogin = SpManager.getInstance(this).getLastLogin()
         if (lastLogin != -1L && System.currentTimeMillis() - lastLogin < 3600000) {
-            val intent = Intent(this, NotesActivity::class.java)
-            startActivity(intent)
+            openToDoListActivity()
         }
     }
 
@@ -60,7 +64,7 @@ class RegistrationActivity : AppCompatActivity() {
         }
     }
 
-    fun displaySignUpFragment() {
+    private fun displaySignUpFragment() {
         isLoginFragment = false
         findViewById<TextView>(R.id.login_signup_tv).text = "Already a member? Click here to Login"
         val loginFragment = SignUpFragment()
@@ -70,7 +74,7 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
 
-    fun displayLoginFragment() {
+    private fun displayLoginFragment() {
         isLoginFragment = true
         findViewById<TextView>(R.id.login_signup_tv).text = "Not a member yet? Click here to SignUp"
         val loginFragment = LoginFragment()
@@ -88,12 +92,15 @@ class RegistrationActivity : AppCompatActivity() {
 
     }
 
-    fun goInApp(userName:String) {
-        val editor = sharedPreferences.edit()
-        editor.putLong("LAST_LOGIN", System.currentTimeMillis()).apply()
-        editor.putString("USER_NAME", userName).apply()
-        val intent = Intent(this, NotesActivity::class.java)
-        startActivity(intent)
+    fun goInApp(googleSignInAccount: GoogleSignInAccount) {
+        val myUser = User(
+            googleSignInAccount.email!!,
+            googleSignInAccount.givenName!!,
+            googleSignInAccount.familyName!!
+        )
+        SpManager.getInstance(this).setMyUser(myUser)
+        SpManager.getInstance(this).setLastLogin()
+        openToDoListActivity()
     }
 
     private fun isUserLegit(): Boolean {
