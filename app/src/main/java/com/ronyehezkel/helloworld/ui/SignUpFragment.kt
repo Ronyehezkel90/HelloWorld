@@ -1,6 +1,7 @@
 package com.ronyehezkel.helloworld.ui
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,14 +12,22 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
+import com.google.android.gms.auth.api.proxy.ProxyApi
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.ronyehezkel.helloworld.FirebaseManager
 import com.ronyehezkel.helloworld.R
+import com.ronyehezkel.helloworld.SharedPrefManager
+import com.ronyehezkel.helloworld.model.Note
+import com.ronyehezkel.helloworld.model.NotesList
+import com.ronyehezkel.helloworld.model.Repository
+import com.ronyehezkel.helloworld.model.User
 import com.ronyehezkel.helloworld.viewmodel.RegistrationViewModel
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 
@@ -78,7 +87,13 @@ class SignUpFragment : Fragment() {
                 if (it.signInMethods.isNullOrEmpty()) {
                     registerToNotesAppWithFirebase(googleSignInAccount)
                 } else {
-                    getIntoApp(googleSignInAccount.displayName.toString())
+                    FirebaseManager.getInstance(requireContext()).getUser()
+                        .addOnSuccessListener {
+                            val user = it.toObject(User::class.java)
+                            println(user)
+                            getIntoApp(googleSignInAccount.displayName.toString())
+                        }
+                        .addOnFailureListener { }
                 }
             }
             .addOnFailureListener { displayToast("Failed on firebaseAuth.fetchSignInMethodsForEmail") }
@@ -88,7 +103,21 @@ class SignUpFragment : Fragment() {
         val authCredential = GoogleAuthProvider.getCredential(googleSignInAccount.idToken, null)
         firebaseAuth.signInWithCredential(authCredential)
             .addOnSuccessListener {
-                getIntoApp(googleSignInAccount.displayName.toString())
+                val user = User(
+                    googleSignInAccount.email!!,
+                    googleSignInAccount.givenName!!,
+                    googleSignInAccount.familyName!!,
+                    NotesList()
+                )
+                SharedPrefManager.myUser = user
+
+                FirebaseManager.getInstance(requireContext()).addUser(user)
+                    .addOnSuccessListener {
+                        Repository.getInstance(requireContext()).addUser(user)
+                        getIntoApp(googleSignInAccount.displayName.toString())
+
+                    }
+                    .addOnFailureListener { println(it) }
             }
             .addOnFailureListener {
                 displayToast("Please try again later Exception: ${it.message}")

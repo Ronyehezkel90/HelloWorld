@@ -2,15 +2,20 @@ package com.ronyehezkel.helloworld.model
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import com.ronyehezkel.helloworld.FirebaseManager
+import com.ronyehezkel.helloworld.SharedPrefManager
+import kotlin.concurrent.thread
 
-class Repository private constructor(applicationContext: Context) {
-    private val dao = NotesDatabase.getDatabase(applicationContext).getNotesDao()
+class Repository private constructor(val applicationContext: Context) {
+    private val notesDao = NotesDatabase.getDatabase(applicationContext).getNotesDao()
+    private val userDao = NotesDatabase.getDatabase(applicationContext).getUsersDao()
+    private val firebaseManager = FirebaseManager.getInstance(applicationContext)
 
-    companion object{
+    companion object {
         private lateinit var instance: Repository
 
-        fun getInstance(context:Context): Repository {
-            if(!Companion::instance.isInitialized){
+        fun getInstance(context: Context): Repository {
+            if (!Companion::instance.isInitialized) {
                 instance = Repository(context)
             }
             return instance
@@ -18,14 +23,22 @@ class Repository private constructor(applicationContext: Context) {
     }
 
     fun getAllNotesAsLiveData(): LiveData<List<Note>> {
-            return dao.getAllNotes()
+        return notesDao.getAllNotes()
     }
 
     fun addNote(note: Note) {
-        dao.insertNote(note)
+        notesDao.insertNote(note)
+        firebaseManager.addNoteToUser(note)
     }
 
     fun updateNoteImage(note: Note, uri: String, imageType: IMAGE_TYPE) {
-        dao.updateNoteImage(note, uri, imageType)
+        notesDao.updateNoteImage(note, uri, imageType)
+    }
+
+    fun addUser(user: User) {
+        SharedPrefManager.myUser = user
+        thread (start = true){
+            userDao.insertUser(user)
+        }
     }
 }
