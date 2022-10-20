@@ -16,6 +16,7 @@ data class Note(
     var timestamp: Long = System.currentTimeMillis()
 )
 {
+    constructor():this("", "")
     @PrimaryKey(autoGenerate = true)
     var id = 0
 }

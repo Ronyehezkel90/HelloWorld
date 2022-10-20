@@ -11,5 +11,9 @@ data class ToDoList(
     @ColumnInfo(name = "participants")
     var participants: Participants = Participants(arrayListOf()),
     @ColumnInfo(name = "notes")
-    var notes: NotesList = NotesList(arrayListOf())
+    var notes: NotesList = NotesList(arrayListOf()),
+    var timestamp: Long = System.currentTimeMillis()
 )
+{
+    constructor() : this("")
+}

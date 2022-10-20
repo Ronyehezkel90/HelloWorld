@@ -25,6 +25,7 @@ class SpManager private constructor(context: Context) {
             .putString(firstNameKey, user.firstName)
             .putString(lastNameKey, user.lastName)
             .putString(emailKey, user.email)
+            .putString(imageKey, user.imagePath)
             .apply()
     }
 
@@ -32,7 +33,8 @@ class SpManager private constructor(context: Context) {
         val firstName = sharedPrefs.getString(firstNameKey, "")!!
         val lastName = sharedPrefs.getString(lastNameKey, "")!!
         val email = sharedPrefs.getString(emailKey, "")!!
-        return User(email, firstName, lastName)
+        val image = sharedPrefs.getString(imageKey, "")!!
+        return User(email, firstName, lastName, arrayListOf(), image)
     }
 
     fun setLastLogin() {
@@ -46,6 +48,7 @@ class SpManager private constructor(context: Context) {
     private val firstNameKey = "FIRST_NAME"
     private val lastNameKey = "LAST_NAME"
     private val emailKey = "EMAIL"
+    private val imageKey = "IMAGE"
     private val lastLoginKey = "LAST_LOGIN"
 
 }

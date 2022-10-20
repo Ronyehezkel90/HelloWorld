@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey
 const val EMAIL_COL = "email"
 const val FIRST_NAME_COL = "firstName"
 const val LAST_NAME_COL = "lastName"
+const val TO_DO_LISTS_COL = "toDoLists"
+const val IMAGE_PATH_COL = "imagePath"
 
 @Entity(tableName = "usersTable")
 data class User(
@@ -14,8 +16,10 @@ data class User(
     @ColumnInfo(name = EMAIL_COL) val email: String,
     @ColumnInfo(name = FIRST_NAME_COL) val firstName: String,
     @ColumnInfo(name = LAST_NAME_COL) val lastName: String,
+    @ColumnInfo(name = TO_DO_LISTS_COL) val toDoLists: MutableList<String> = arrayListOf(),
+    @ColumnInfo(name = IMAGE_PATH_COL) var imagePath: String? = null
 ){
-    constructor() : this("", "","")
+    constructor() : this("", "","", arrayListOf(), "")
 //    @PrimaryKey(autoGenerate = true)
 //    var id = 0
 }

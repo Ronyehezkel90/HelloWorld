@@ -4,10 +4,9 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -41,8 +40,9 @@ class NotesActivity : AppCompatActivity() {
         setButtonClickListener()
         val toDoListTitle = intent.extras?.get("title")
         if (toDoListTitle != null) {
+            to_do_list_title_tv.text = toDoListTitle as String
             notesViewModel.viewModelScope.launch {
-                val toDoList = notesViewModel.getToDoListByTitle(toDoListTitle as String)
+                val toDoList = notesViewModel.getToDoListByTitle(toDoListTitle)
                 notesViewModel.setCurrentToDoList(toDoList)
             }
 
@@ -50,9 +50,6 @@ class NotesActivity : AppCompatActivity() {
             displayTitleAlertDialog()
         }
         createRecyclerView()
-
-        val userName = "Ron"
-        to_do_list_title_tv.text = "Hello " + userName
     }
 
     private fun displayPersonDetailsFragment(note: Note) {
@@ -100,17 +97,17 @@ class NotesActivity : AppCompatActivity() {
 
     private fun onNoteImageClick(): (note: Note) -> Unit = { note ->
         chosenNote = note
-        displayImagesAlertDialog(note, getContentFromGallery)
+        displayImagesAlertDialog(note)
     }
 
-    private fun displayImagesAlertDialog(note: Note, getContent: ActivityResultLauncher<Intent>) {
+    private fun displayImagesAlertDialog(note: Note) {
         val context = this
         val alertDialogBuilder = AlertDialog.Builder(this)
         alertDialogBuilder.setTitle("Choose an image")
         alertDialogBuilder.setMessage("Choose image for ${note.title}")
         alertDialogBuilder.setNeutralButton("Cancel") { dialogInterface: DialogInterface, i: Int -> }
         alertDialogBuilder.setPositiveButton("Gallery") { dialogInterface: DialogInterface, i: Int ->
-            ImagesManager.getImageFromGallery(note, getContent)
+            ImagesManager.getImageFromGallery(getContentFromGallery)
         }
         alertDialogBuilder.setNegativeButton("Network") { dialogInterface: DialogInterface, i: Int ->
             notesViewModel.viewModelScope.launch(Dispatchers.IO) {
@@ -136,7 +133,6 @@ class NotesActivity : AppCompatActivity() {
             val myUser = SpManager.getInstance(this).getMyUser()
             val toDoList = ToDoList(toDoListTitle, Participants(arrayListOf(myUser)))
             notesViewModel.createToDoList(toDoList)
-            notesViewModel.setCurrentToDoList(toDoList)
         }
         alertDialogBuilder.setNegativeButton("Cancel") { dialogInterface: DialogInterface, i: Int ->
             finish()
@@ -159,18 +155,14 @@ class NotesActivity : AppCompatActivity() {
                 if (it != null) {
                     for (user in it.usersList) {
                         val textView = TextView(this)
-                        textView.text = user.firstName.first().toString() + user.lastName.first().toString()
+                        textView.text =
+                            user.firstName.first().toString() + user.lastName.first().toString()
                         textView.setPadding(20)
                         users_layout_id.addView(textView)
                     }
                 }
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
-        return super.onCreateOptionsMenu(menu)
     }
 
     private fun displayAddUserAlertDialog() {
@@ -181,7 +173,7 @@ class NotesActivity : AppCompatActivity() {
         alertDialogBuilder.setView(toDoListEditText)
         alertDialogBuilder.setPositiveButton("Add") { dialogInterface: DialogInterface, i: Int ->
             val userEmail = toDoListEditText.text.toString()
-                notesViewModel.addUser(this, userEmail)
+            notesViewModel.addParticipant(this, userEmail)
 //
         }
         alertDialogBuilder.setNegativeButton("Cancel") { dialogInterface: DialogInterface, i: Int ->
@@ -189,8 +181,20 @@ class NotesActivity : AppCompatActivity() {
         alertDialogBuilder.show()
     }
 
-    fun addUserOnClick(view: View) {
-        displayAddUserAlertDialog()
+    private fun displayCantAddUserAlertDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setTitle("Cant Add participant")
+        alertDialogBuilder.setMessage("Cant add more than 1 user for blue variant")
+        alertDialogBuilder.setNegativeButton("Ok") { dialogInterface: DialogInterface, i: Int ->
+        }
+        alertDialogBuilder.show()
     }
 
+    fun addUserOnClick(view: View) {
+        if (BuildConfig.FLAVOR == "blueFlavor") {
+            displayCantAddUserAlertDialog()
+        } else {
+            displayAddUserAlertDialog()
+        }
+    }
 }

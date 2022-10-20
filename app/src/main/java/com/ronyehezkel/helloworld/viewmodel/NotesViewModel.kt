@@ -2,14 +2,10 @@ package com.ronyehezkel.helloworld.viewmodel
 
 import android.app.Application
 import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentSnapshot
-import com.ronyehezkel.helloworld.Firestore
 import com.ronyehezkel.helloworld.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,7 +13,6 @@ import kotlinx.coroutines.launch
 class NotesViewModel(val app: Application) : AndroidViewModel(app) {
     private val repository = Repository.getInstance(app.applicationContext)
     val toDoListLiveData: MutableLiveData<ToDoList> = MutableLiveData()
-    val firestore = Firestore.getInstance(app.applicationContext)
 
     fun getNotesLiveData(toDoList: ToDoList): LiveData<NotesList> {
         return repository.getNotesByToDoList(toDoList)
@@ -33,32 +28,34 @@ class NotesViewModel(val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun addUser(context: Context, email: String) {
+    fun addParticipant(context: Context, email: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            firestore.getUser(email).addOnSuccessListener { document ->
-                if (document.data != null) {
-//                    Moshe@gmail.com
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val user = document.toObject(User::class.java)
+            repository.addParticipant(this, email, toDoListLiveData.value!!)
+//            firestore.getUser(email).addOnSuccessListener { document ->
+//                if (document.data != null) {
+//                    viewModelScope.launch(Dispatchers.IO) {
+//                        val user = document.toObject(User::class.java)
 //                        Firestore.getInstance(app).addParticipant(user!!).addOnSuccessListener {
-                            repository.addUserToToDoList(toDoListLiveData.value!!, user!!)
+//                            repository.addUserToToDoList(toDoListLiveData.value!!, user!!)
 //                        }
-                    }
-                } else {
-                    Toast.makeText(context, "Not Found", Toast.LENGTH_LONG).show()
-                }
-            }
+//                    }
+//                } else {
+//                    Toast.makeText(context, "Not Found", Toast.LENGTH_LONG).show()
+//                }
         }
     }
 
     fun createToDoList(toDoList: ToDoList) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.addToDoList(toDoList)
+            setCurrentToDoList(toDoList)
         }
     }
 
     fun setCurrentToDoList(toDoList: ToDoList) {
-        toDoListLiveData.value = toDoList
+        viewModelScope.launch (Dispatchers.Main){
+            toDoListLiveData.value = toDoList
+        }
     }
 
     suspend fun getToDoListByTitle(toDoListTitle: String): ToDoList {

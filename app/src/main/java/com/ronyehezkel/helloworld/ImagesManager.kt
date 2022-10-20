@@ -2,10 +2,13 @@ package com.ronyehezkel.helloworld
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.Task
+import com.google.firebase.storage.UploadTask
 import com.ronyehezkel.helloworld.model.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -15,12 +18,40 @@ import retrofit2.Response
 
 object ImagesManager {
 
-    fun getImageFromGallery(note: Note, getContent: ActivityResultLauncher<Intent>) {
-        Log.d("Test", "Click on ${note.title}")
+    fun getImageFromGallery(getContent: ActivityResultLauncher<Intent>) {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.type = "image/*"
         getContent.launch(intent)
+    }
+
+    private fun addImageToUser(context: Context, imagePath: Uri?): UploadTask {
+        return FirebaseManager.getInstance(context).uploadUserProfile(imagePath!!)
+    }
+
+    fun onProfilePhotoResultFromGallery(
+        result: ActivityResult,
+        context: Context
+    ) {
+        if (result.resultCode == AppCompatActivity.RESULT_OK) {
+            val uri = result.data?.data
+            if (uri != null) {
+                context.contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+                addImageToUser(context, uri).addOnSuccessListener {
+                    FirebaseManager.getInstance(context)
+                        .getUserProfileRef().downloadUrl.addOnSuccessListener {
+                            val spManager = SpManager.getInstance(context)
+                            val myUser = spManager.getMyUser()
+                            myUser.imagePath = it.path
+                            spManager.setMyUser(myUser)
+                            FirebaseManager.getInstance(context).updateUser(myUser)
+                        }
+                }
+            }
+        }
     }
 
     fun onImageResultFromGallery(
@@ -75,5 +106,9 @@ object ImagesManager {
                 Log.e("Wrong api response", t.message.toString())
             }
         })
+    }
+
+    fun getProfilePhoto(context: Context): Task<ByteArray> {
+        return FirebaseManager.getInstance(context).getUserProfile()
     }
 }

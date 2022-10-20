@@ -70,7 +70,7 @@
         android:layout_margin="20dp"
         app:layoutManager="LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/button"
-        app:layout_constraintTop_toBottomOf="@id/to_do_list_title_tv" />
+        app:layout_constraintTop_toBottomOf="@id/scrollPartition" />
 
     <EditText
         android:id="@+id/note_title_et"
