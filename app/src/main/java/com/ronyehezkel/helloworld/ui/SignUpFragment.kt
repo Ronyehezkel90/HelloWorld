@@ -18,7 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.ronyehezkel.helloworld.Firestore
+import com.ronyehezkel.helloworld.FirebaseManager
 import com.ronyehezkel.helloworld.R
 import com.ronyehezkel.helloworld.model.User
 import com.ronyehezkel.helloworld.viewmodel.RegistrationViewModel
@@ -95,7 +95,7 @@ class SignUpFragment : Fragment() {
                     googleSignInAccount.givenName!!,
                     googleSignInAccount.familyName!!
                 )
-                Firestore.getInstance(requireContext()).addUser(newUser)
+                FirebaseManager.getInstance(requireContext()).addUser(newUser)
                 getIntoApp(googleSignInAccount)
             }
             .addOnFailureListener {

@@ -7,9 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentSnapshot
-import com.ronyehezkel.helloworld.Firestore
+import com.ronyehezkel.helloworld.FirebaseManager
 import com.ronyehezkel.helloworld.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,7 +15,7 @@ import kotlinx.coroutines.launch
 class NotesViewModel(val app: Application) : AndroidViewModel(app) {
     private val repository = Repository.getInstance(app.applicationContext)
     val toDoListLiveData: MutableLiveData<ToDoList> = MutableLiveData()
-    val firestore = Firestore.getInstance(app.applicationContext)
+    val firebaseManager = FirebaseManager.getInstance(app.applicationContext)
 
     fun getNotesLiveData(toDoList: ToDoList): LiveData<NotesList> {
         return repository.getNotesByToDoList(toDoList)
@@ -35,7 +33,7 @@ class NotesViewModel(val app: Application) : AndroidViewModel(app) {
 
     fun addUser(context: Context, email: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            firestore.getUser(email).addOnSuccessListener { document ->
+            firebaseManager.getUser(email).addOnSuccessListener { document ->
                 if (document.data != null) {
 //                    Moshe@gmail.com
                     viewModelScope.launch(Dispatchers.IO) {

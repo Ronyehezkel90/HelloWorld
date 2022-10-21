@@ -12,4 +12,6 @@ data class ToDoList(
     var participants: Participants = Participants(arrayListOf()),
     @ColumnInfo(name = "notes")
     var notes: NotesList = NotesList(arrayListOf())
-)
+){
+    constructor() : this("")
+}
