@@ -9,3 +9,24 @@ class AboutActivity : AppCompatActivity() {
         setContentView(R.layout.activity_about)
     }
 }
+
+private fun getUpdatedToDoLists(allToDoListsLiveData: LiveData<List<ToDoList>>) {
+    firebaseManager.getToDoListPagination().addOnSuccessListener {
+        for (d in it.documents) {
+            if (d.data != null) {
+                val toDoList = d.toObject(ToDoList::class.java)
+                if (!allToDoListsLiveData.value!!.contains(toDoList)) {
+                    thread(start = true) {
+                        toDoListDao.insertToDoList(toDoList!!)
+                    }
+                }
+            }
+        }
+    }
+}
+
+fun getAllToDoLists(): LiveData<List<ToDoList>> {
+    val allToDoListsLiveData =  toDoListDao.getAllToDoLists()
+    getUpdatedToDoLists(allToDoListsLiveData)
+    return allToDoListsLiveData
+}

@@ -76,7 +76,7 @@ class Repository private constructor(applicationContext: Context) {
         firebaseManager.getUser().addOnSuccessListener { userJson ->
             if (userJson.data != null) {
                 val user = userJson.toObject(User::class.java)
-//                getAllLists(user!!, dbToDoLists)
+                getAllLists(user!!, dbToDoLists)
                 getPaginationLists( dbToDoLists)
             }
         }

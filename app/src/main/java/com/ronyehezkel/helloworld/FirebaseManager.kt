@@ -48,7 +48,7 @@ class FirebaseManager private constructor(context: Context) {
     }
 
     fun uploadUserProfile(imagePath: Uri): UploadTask {
-        return getUserProfileRef().putFile(imagePath)
+        return storage.reference.child(spManager.getMyUser().email).putFile(imagePath)
     }
 
     fun getUserProfileRef(): StorageReference {
