@@ -16,8 +16,7 @@
         android:theme="@style/Theme.HelloWorld">
         <activity
             android:name=".ui.ToDoListActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".ui.RegistrationActivity"
             android:exported="true">
@@ -36,6 +35,14 @@
             android:name=".NotesService"
             android:enabled="true"
             android:exported="true" />
+
+        <service
+            android:name=".FcmService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

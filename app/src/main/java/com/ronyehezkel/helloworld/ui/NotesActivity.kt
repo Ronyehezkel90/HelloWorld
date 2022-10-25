@@ -191,10 +191,10 @@ class NotesActivity : AppCompatActivity() {
     }
 
     fun addUserOnClick(view: View) {
-        if (BuildConfig.FLAVOR == "blueFlavor") {
-            displayCantAddUserAlertDialog()
-        } else {
+//        if (BuildConfig.FLAVOR == "blueFlavor") {
+//            displayCantAddUserAlertDialog()
+//        } else {
             displayAddUserAlertDialog()
-        }
+//        }
     }
 }

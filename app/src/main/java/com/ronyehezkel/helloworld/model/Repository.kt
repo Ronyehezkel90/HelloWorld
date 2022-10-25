@@ -2,14 +2,19 @@ package com.ronyehezkel.helloworld.model
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import com.ronyehezkel.helloworld.FcmApiInterface
 import com.ronyehezkel.helloworld.FirebaseManager
 import kotlinx.coroutines.CoroutineScope
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import kotlin.concurrent.thread
 
 class Repository private constructor(applicationContext: Context) {
     //    private val notesDao = AppDatabase.getDatabase(applicationContext).getNotesDao()
     private val toDoListDao = AppDatabase.getDatabase(applicationContext).getToDoListDao()
     val firebaseManager = FirebaseManager.getInstance(applicationContext)
+    val spManager = SpManager.getInstance(applicationContext)
 
     companion object {
         private lateinit var instance: Repository
@@ -77,7 +82,7 @@ class Repository private constructor(applicationContext: Context) {
             if (userJson.data != null) {
                 val user = userJson.toObject(User::class.java)
                 getAllLists(user!!, dbToDoLists)
-                getPaginationLists( dbToDoLists)
+                getPaginationLists(dbToDoLists)
             }
         }
         return dbToDoLists
@@ -113,9 +118,38 @@ class Repository private constructor(applicationContext: Context) {
                         thread(start = true) {
                             updateToDoList(toDoList)
                         }
+
+                        val retrofit = FcmApiInterface.create()
+                        val data = hashMapOf<String, String>(
+                            Pair("senderName", "Ron90"),
+                            Pair("content", "hey im coming from device"),
+                            Pair("todoListName",toDoList.title )
+                        )
+
+                        val body = hashMapOf<String, Any>(Pair("data", data), Pair("to",user.fcmToken!! ))
+                        retrofit.sendDataNotificationMessage(body).enqueue(object : Callback<Any> {
+                            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                                print(it)
+                            }
+
+                            override fun onFailure(call: Call<Any>, t: Throwable) {
+                                print(it)
+                            }
+                        })
+
                     }
                 }
             }
+        }
+    }
+
+    fun updateFcmToken() {
+        firebaseManager.getToken().addOnSuccessListener {
+            print("token: $it")
+            val user = spManager.getMyUser()
+            user.fcmToken = it
+            spManager.setMyUser(user)
+            firebaseManager.updateUser(user)
         }
     }
 

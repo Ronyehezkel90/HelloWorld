@@ -8,6 +8,8 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.ktx.FirebaseMessagingKtxRegistrar
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
@@ -20,6 +22,7 @@ import kotlin.concurrent.thread
 class FirebaseManager private constructor(context: Context) {
     val db = Firebase.firestore
     val storage = FirebaseStorage.getInstance()
+    val fcm = FirebaseMessaging.getInstance()
     val spManager = SpManager.getInstance(context)
 
     private fun getUserEmail(): String {
@@ -79,6 +82,10 @@ class FirebaseManager private constructor(context: Context) {
         return db.collection("ToDoList")
             .orderBy("timestamp")
             .endAt(1666199133631).get()
+    }
+
+    fun getToken(): Task<String> {
+        return fcm.token
     }
 
 

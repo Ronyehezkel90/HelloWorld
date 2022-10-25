@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.ronyehezkel.helloworld.FcmApiInterface
 import com.ronyehezkel.helloworld.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,6 +32,7 @@ class NotesViewModel(val app: Application) : AndroidViewModel(app) {
     fun addParticipant(context: Context, email: String) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.addParticipant(this, email, toDoListLiveData.value!!)
+
 //            firestore.getUser(email).addOnSuccessListener { document ->
 //                if (document.data != null) {
 //                    viewModelScope.launch(Dispatchers.IO) {
@@ -53,7 +55,7 @@ class NotesViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     fun setCurrentToDoList(toDoList: ToDoList) {
-        viewModelScope.launch (Dispatchers.Main){
+        viewModelScope.launch(Dispatchers.Main) {
             toDoListLiveData.value = toDoList
         }
     }

@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.ronyehezkel.helloworld.R
+import com.ronyehezkel.helloworld.model.Repository
 import com.ronyehezkel.helloworld.model.SpManager
 import com.ronyehezkel.helloworld.model.User
 
@@ -33,6 +34,7 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
     private fun openToDoListActivity() {
+        Repository.getInstance(this).updateFcmToken()
         val intent = Intent(this, ToDoListActivity::class.java)
         startActivity(intent)
     }
