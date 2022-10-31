@@ -35,7 +35,6 @@ class NotesViewModel(val app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(Dispatchers.IO) {
             firebaseManager.getUser(email).addOnSuccessListener { document ->
                 if (document.data != null) {
-//                    Moshe@gmail.com
                     viewModelScope.launch(Dispatchers.IO) {
                         val user = document.toObject(User::class.java)
 //                        Firestore.getInstance(app).addParticipant(user!!).addOnSuccessListener {

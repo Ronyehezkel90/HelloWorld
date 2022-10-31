@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 const val EMAIL_COL = "email"
 const val FIRST_NAME_COL = "firstName"
 const val LAST_NAME_COL = "lastName"
+const val FCM_TOKEN = "fcmToken"
 
 @Entity(tableName = "usersTable")
 data class User(
@@ -14,8 +15,9 @@ data class User(
     @ColumnInfo(name = EMAIL_COL) val email: String,
     @ColumnInfo(name = FIRST_NAME_COL) val firstName: String,
     @ColumnInfo(name = LAST_NAME_COL) val lastName: String,
+    @ColumnInfo(name = FCM_TOKEN) var fcmToken: String,
 ){
-    constructor() : this("", "","")
+    constructor() : this("", "","", "")
 //    @PrimaryKey(autoGenerate = true)
 //    var id = 0
 }

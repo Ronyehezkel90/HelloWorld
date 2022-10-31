@@ -1,24 +1,32 @@
 package com.ronyehezkel.helloworld
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.Uri
+import android.provider.Settings.Global.getString
+import android.util.Log
+import android.widget.Toast
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
+import com.ronyehezkel.helloworld.model.SpManager
 import com.ronyehezkel.helloworld.model.ToDoList
 import com.ronyehezkel.helloworld.model.User
 
 class FirebaseManager private constructor(context: Context) {
     val db = Firebase.firestore
     val storage = FirebaseStorage.getInstance()
+    val fcm = FirebaseMessaging.getInstance()
+
     fun getUser(userEmail: String): Task<DocumentSnapshot> {
         return db.collection("users").document(userEmail).get()
-
     }
 
     fun getUserProfileImageReference(): StorageReference {
@@ -29,18 +37,14 @@ class FirebaseManager private constructor(context: Context) {
         return getUserProfileImageReference().putFile(uri)
     }
 
-    fun addUser(newUser: User): Task<Void> {
+    fun updateUser(newUser: User): Task<Void> {
         return db.collection("users").document(newUser.email).set(newUser)
 //            .addOnSuccessListener { Log.d("test", "DocumentSnapshot successfully written!") }
 //            .addOnFailureListener { e -> Log.w("test", "Error writing document", e) }
     }
 
-    fun addParticipant(user: User): Any {
-        TODO("Not yet implemented")
-    }
-
-    fun updateToDoList(toDoList: ToDoList) {
-        db.collection("ToDoList").document(toDoList.title).set(toDoList)
+    fun updateToDoList(toDoList: ToDoList): Task<Void> {
+        return db.collection("ToDoList").document(toDoList.id).set(toDoList)
     }
 
     fun getPartOfToDoLists(countLetters: Int): Task<QuerySnapshot> {
@@ -63,6 +67,14 @@ class FirebaseManager private constructor(context: Context) {
             }
             return instance
         }
+    }
+
+    fun getFcmToken(): Task<String> {
+        return fcm.token
+    }
+
+    fun subscribeToTopic(){
+//        FirebaseMessaging.getInstance().subscribeToTopic(R.string.topic.toString());
     }
 
 //    fun getUserByEmail(email:String): Task<SignInMethodQueryResult> {

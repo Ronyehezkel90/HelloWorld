@@ -32,7 +32,8 @@ class SpManager private constructor(context: Context) {
         val firstName = sharedPrefs.getString(firstNameKey, "")!!
         val lastName = sharedPrefs.getString(lastNameKey, "")!!
         val email = sharedPrefs.getString(emailKey, "")!!
-        return User(email, firstName, lastName)
+        val fcmToken = sharedPrefs.getString(fcmTokenKey, "")!!
+        return User(email, firstName, lastName, fcmToken)
     }
 
     fun setLastLogin() {
@@ -47,5 +48,6 @@ class SpManager private constructor(context: Context) {
     private val lastNameKey = "LAST_NAME"
     private val emailKey = "EMAIL"
     private val lastLoginKey = "LAST_LOGIN"
+    private val fcmTokenKey = "FCM_TOKEN"
 
 }

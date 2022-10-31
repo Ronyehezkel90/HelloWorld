@@ -93,9 +93,10 @@ class SignUpFragment : Fragment() {
                 val newUser = User(
                     googleSignInAccount.email!!,
                     googleSignInAccount.givenName!!,
-                    googleSignInAccount.familyName!!
+                    googleSignInAccount.familyName!!,
+                    ""
                 )
-                FirebaseManager.getInstance(requireContext()).addUser(newUser)
+                FirebaseManager.getInstance(requireContext()).updateUser(newUser)
                 getIntoApp(googleSignInAccount)
             }
             .addOnFailureListener {
