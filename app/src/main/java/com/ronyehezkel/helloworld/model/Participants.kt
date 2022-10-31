@@ -1,7 +1,7 @@
 package com.ronyehezkel.helloworld.model
 
-data class NotesList(
-    val notesList: ArrayList<Note>
+data class Participants(
+    val usersList: ArrayList<User>
 ){
     constructor():this(arrayListOf())
 }
