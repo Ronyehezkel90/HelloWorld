@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
+import com.ronyehezkel.helloworld.MyApp
 import com.ronyehezkel.helloworld.R
 import com.ronyehezkel.helloworld.ToDoListAdapter
 import com.ronyehezkel.helloworld.model.Repository
@@ -23,6 +24,7 @@ class ToDoListActivity : AppCompatActivity() {
     private lateinit var repository:Repository
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        object {}.javaClass.enclosingMethod?.name?.let { MyApp.lcLog(this, it) }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_to_do_list)
         toDoListViewModel.getAllToDoListsAsLiveData().observe(this) {
@@ -32,6 +34,7 @@ class ToDoListActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
+        object {}.javaClass.enclosingMethod?.name?.let { MyApp.lcLog(this, it) }
         super.onStart()
     }
 
@@ -76,5 +79,30 @@ class ToDoListActivity : AppCompatActivity() {
 
     fun onDownloadMoreToDoLists(view: View) {
         toDoListViewModel.updateLocalToDoLists()
+    }
+
+    override fun onResume() {
+        object {}.javaClass.enclosingMethod?.name?.let { MyApp.lcLog(this, it) }
+        super.onResume()
+    }
+
+    override fun onPause() {
+        object {}.javaClass.enclosingMethod?.name?.let { MyApp.lcLog(this, it) }
+        super.onPause()
+    }
+
+    override fun onStop() {
+        object {}.javaClass.enclosingMethod?.name?.let { MyApp.lcLog(this, it) }
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        object {}.javaClass.enclosingMethod?.name?.let { MyApp.lcLog(this, it) }
+        super.onDestroy()
+    }
+
+    override fun onRestart() {
+        object {}.javaClass.enclosingMethod?.name?.let { MyApp.lcLog(this, it) }
+        super.onRestart()
     }
 }

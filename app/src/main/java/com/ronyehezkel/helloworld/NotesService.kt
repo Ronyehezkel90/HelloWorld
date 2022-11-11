@@ -11,7 +11,7 @@ class NotesService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val notification = NotificationsManager.getServiceNotification(this)
         startForeground(1, notification)
-        myServiceFunction()
+//        myServiceFunction()
         return super.onStartCommand(intent, flags, startId)
     }
 

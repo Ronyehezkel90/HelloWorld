@@ -30,6 +30,7 @@ class NotesActivity : AppCompatActivity() {
 
     private var chosenNote: Note? = null
     override fun onCreate(savedInstanceState: Bundle?) {
+        object {}.javaClass.enclosingMethod?.name?.let { MyApp.lcLog(this, it) }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notes)
         val serviceIntent = Intent(this, NotesService::class.java)
@@ -37,6 +38,7 @@ class NotesActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
+        object {}.javaClass.enclosingMethod?.name?.let { MyApp.lcLog(this, it) }
         super.onStart()
         setButtonClickListener()
         val toDoListTitle = intent.extras?.get("title")
@@ -193,4 +195,33 @@ class NotesActivity : AppCompatActivity() {
         displayAddUserAlertDialog()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("lesson", "back button override")
+    }
+
+    override fun onResume() {
+        object {}.javaClass.enclosingMethod?.name?.let { MyApp.lcLog(this, it) }
+        super.onResume()
+    }
+
+    override fun onPause() {
+        object {}.javaClass.enclosingMethod?.name?.let { MyApp.lcLog(this, it) }
+        super.onPause()
+    }
+
+    override fun onStop() {
+        object {}.javaClass.enclosingMethod?.name?.let { MyApp.lcLog(this, it) }
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        object {}.javaClass.enclosingMethod?.name?.let { MyApp.lcLog(this, it) }
+        super.onDestroy()
+    }
+
+    override fun onRestart() {
+        object {}.javaClass.enclosingMethod?.name?.let { MyApp.lcLog(this, it) }
+        super.onRestart()
+    }
 }
