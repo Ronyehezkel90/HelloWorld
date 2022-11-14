@@ -3,19 +3,16 @@ package com.ronyehezkel.helloworld.viewmodel
 import android.app.Application
 import android.content.Context
 import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.ronyehezkel.helloworld.FirebaseManager
+import com.ronyehezkel.helloworld.RepositoryI
+import com.ronyehezkel.helloworld.ServerManager
 import com.ronyehezkel.helloworld.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class NotesViewModel(val app: Application) : AndroidViewModel(app) {
-    private val repository = Repository.getInstance(app.applicationContext)
+class NotesViewModel(val serverManager: ServerManager, val repository: RepositoryI) : ViewModel() {
     val toDoListLiveData: MutableLiveData<ToDoList> = MutableLiveData()
-    val firebaseManager = FirebaseManager.getInstance(app.applicationContext)
 
     fun getNotesLiveData(toDoList: ToDoList): LiveData<NotesList> {
         return repository.getNotesByToDoList(toDoList)
@@ -33,7 +30,7 @@ class NotesViewModel(val app: Application) : AndroidViewModel(app) {
 
     fun addUser(context: Context, email: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            firebaseManager.getUser(email).addOnSuccessListener { document ->
+            serverManager.getUser(email).addOnSuccessListener { document ->
                 if (document.data != null) {
                     viewModelScope.launch(Dispatchers.IO) {
                         val user = document.toObject(User::class.java)

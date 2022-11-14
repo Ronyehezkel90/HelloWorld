@@ -6,8 +6,7 @@ import com.ronyehezkel.helloworld.R
 
 class SpManager private constructor(context: Context) {
 
-    val sharedPrefs =
-        context.getSharedPreferences(R.string.app_name.toString(), AppCompatActivity.MODE_PRIVATE)
+    val sharedPrefs = context.getSharedPreferences(R.string.app_name.toString(), AppCompatActivity.MODE_PRIVATE)
 
     companion object {
         private lateinit var instance: SpManager

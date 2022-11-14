@@ -22,7 +22,8 @@ class NotesService : Service() {
     private fun myServiceFunction() {
         thread(start = true) {
             while (true) {
-                Thread.sleep(5000)
+
+                Thread.sleep(BuildConfig.SLEEP_TIME)
                 Log.d("test", "5 seconds passed")
             }
         }

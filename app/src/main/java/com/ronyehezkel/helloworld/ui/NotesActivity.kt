@@ -26,7 +26,9 @@ import kotlinx.coroutines.launch
 
 class NotesActivity : AppCompatActivity() {
 
-    private val notesViewModel: NotesViewModel by viewModels()
+    private val notesViewModel: NotesViewModel by viewModels() {
+        ViewModelFactory(FirebaseManager.getInstance(this), Repository.getInstance(this))
+    }
 
     private var chosenNote: Note? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -161,7 +163,8 @@ class NotesActivity : AppCompatActivity() {
                 if (it != null) {
                     for (user in it.usersList) {
                         val textView = TextView(this)
-                        textView.text = user.firstName.first().toString() + user.lastName.first().toString()
+                        textView.text =
+                            user.firstName.first().toString() + user.lastName.first().toString()
                         textView.setPadding(20)
                         users_layout_id.addView(textView)
                     }
@@ -183,7 +186,7 @@ class NotesActivity : AppCompatActivity() {
         alertDialogBuilder.setView(toDoListEditText)
         alertDialogBuilder.setPositiveButton("Add") { dialogInterface: DialogInterface, i: Int ->
             val userEmail = toDoListEditText.text.toString()
-                notesViewModel.addUser(this, userEmail)
+            notesViewModel.addUser(this, userEmail)
 //
         }
         alertDialogBuilder.setNegativeButton("Cancel") { dialogInterface: DialogInterface, i: Int ->

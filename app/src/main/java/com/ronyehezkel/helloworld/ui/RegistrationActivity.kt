@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.ronyehezkel.helloworld.R
+import com.ronyehezkel.helloworld.Utils
 import com.ronyehezkel.helloworld.model.Repository
 import com.ronyehezkel.helloworld.model.SpManager
 import com.ronyehezkel.helloworld.model.User
@@ -40,8 +41,7 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
     private fun calculateLastLogin() {
-        val lastLogin = SpManager.getInstance(this).getLastLogin()
-        if (lastLogin != -1L && System.currentTimeMillis() - lastLogin < 3600000) {
+        if (Utils.checkIfOneHourPassed(this)) {
             openToDoListActivity()
         }
     }

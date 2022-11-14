@@ -20,12 +20,12 @@ import com.ronyehezkel.helloworld.model.SpManager
 import com.ronyehezkel.helloworld.model.ToDoList
 import com.ronyehezkel.helloworld.model.User
 
-class FirebaseManager private constructor(context: Context) {
+class FirebaseManager private constructor(context: Context):ServerManager {
     val db = Firebase.firestore
     val storage = FirebaseStorage.getInstance()
     val fcm = FirebaseMessaging.getInstance()
 
-    fun getUser(userEmail: String): Task<DocumentSnapshot> {
+    override fun getUser(userEmail: String): Task<DocumentSnapshot> {
         return db.collection("users").document(userEmail).get()
     }
 

@@ -8,9 +8,10 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.storage.StorageReference
 import com.ronyehezkel.helloworld.FirebaseManager
 import com.ronyehezkel.helloworld.NotificationsManager
+import com.ronyehezkel.helloworld.RepositoryI
 import kotlin.concurrent.thread
 
-class Repository private constructor(applicationContext: Context) {
+class Repository private constructor(applicationContext: Context):RepositoryI {
     //    private val notesDao = AppDatabase.getDatabase(applicationContext).getNotesDao()
     private val toDoListDao = AppDatabase.getDatabase(applicationContext).getToDoListDao()
     private val firebaseManager = FirebaseManager.getInstance(applicationContext)
@@ -27,7 +28,7 @@ class Repository private constructor(applicationContext: Context) {
         }
     }
 
-    fun addUserToToDoList(toDoList: ToDoList, user: User) {
+    override fun addUserToToDoList(toDoList: ToDoList, user: User) {
         toDoList.participants.usersList.add(user)
         firebaseManager.updateToDoList(toDoList).addOnSuccessListener {
             thread(start = true) {
@@ -41,7 +42,7 @@ class Repository private constructor(applicationContext: Context) {
         }
     }
 
-    fun addNote(toDoList: ToDoList, note: Note) {
+    override fun addNote(toDoList: ToDoList, note: Note) {
         toDoList.notes.notesList.add(note)
         toDoListDao.updateNotesList(toDoList.title, toDoList.notes)
     }
@@ -88,20 +89,20 @@ class Repository private constructor(applicationContext: Context) {
         return toDoListDao.getAllToDoLists()
     }
 
-    fun addToDoList(toDoList: ToDoList) {
+    override fun addToDoList(toDoList: ToDoList) {
         firebaseManager.updateToDoList(toDoList)
         return toDoListDao.insertToDoList(toDoList)
     }
 
-    fun getNotesByToDoList(toDoList: ToDoList): LiveData<NotesList> {
+    override fun getNotesByToDoList(toDoList: ToDoList): LiveData<NotesList> {
         return toDoListDao.getAllNotes(toDoList.title)
     }
 
-    fun getToDoListByTitle(toDoListTitle: String): ToDoList {
+    override fun getToDoListByTitle(toDoListTitle: String): ToDoList {
         return toDoListDao.getToDoListByTitle(toDoListTitle)
     }
 
-    fun getUsersByToDoList(toDoList: ToDoList): LiveData<Participants> {
+    override fun getUsersByToDoList(toDoList: ToDoList): LiveData<Participants> {
         return toDoListDao.getAllUsers(toDoList.title)
     }
 
