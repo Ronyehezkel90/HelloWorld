@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.ronyehezkel.helloworld.GoogleSignInHelper
 import com.ronyehezkel.helloworld.R
 import com.ronyehezkel.helloworld.Utils
 import com.ronyehezkel.helloworld.model.Repository
@@ -16,9 +17,15 @@ import com.ronyehezkel.helloworld.model.SpManager
 import com.ronyehezkel.helloworld.model.User
 
 class RegistrationActivity : AppCompatActivity() {
+    val googleSignInHelper = GoogleSignInHelper(this, { onSuccessfulLogin() })
+
     var isLoginFragment = true
     val userName = "a@a.com"
     val password = "1234"
+
+    private fun onSuccessfulLogin() {
+        openToDoListActivity()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d("Test", "onCreate")
@@ -34,7 +41,7 @@ class RegistrationActivity : AppCompatActivity() {
         calculateLastLogin()
     }
 
-    private fun openToDoListActivity() {
+    fun openToDoListActivity() {
         Repository.getInstance(this).updateFcmToken()
         val intent = Intent(this, ToDoListActivity::class.java)
         startActivity(intent)
