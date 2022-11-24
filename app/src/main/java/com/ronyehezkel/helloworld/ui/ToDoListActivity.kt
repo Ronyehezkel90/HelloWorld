@@ -29,6 +29,7 @@ class ToDoListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_to_do_list)
         toDoListViewModel.getAllToDoListsAsLiveData().observe(this) {
             grid_view.adapter = ToDoListAdapter(this, it, onToDoListClick())
+            repository.updateRemoteLists(it)
         }
         repository = Repository.getInstance(this)
     }

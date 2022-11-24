@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 enum class IMAGE_TYPE {
     URI, URL
 }
+
 @Entity
 data class Note(
     val title: String,
@@ -14,8 +15,10 @@ data class Note(
     var imagePath: String? = null,
     var imageType: IMAGE_TYPE? = null,
     var timestamp: Long = System.currentTimeMillis()
-)
-{
+) {
     @PrimaryKey(autoGenerate = true)
     var id = 0
+
+    constructor() : this("", "")
+
 }

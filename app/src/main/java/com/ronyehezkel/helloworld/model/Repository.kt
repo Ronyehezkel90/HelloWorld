@@ -45,6 +45,7 @@ class Repository private constructor(applicationContext: Context):RepositoryI {
     override fun addNote(toDoList: ToDoList, note: Note) {
         toDoList.notes.notesList.add(note)
         toDoListDao.updateNotesList(toDoList.title, toDoList.notes)
+        firebaseManager.updateToDoList(toDoList)
     }
 
     fun updateNoteImage(toDoList: ToDoList) {
@@ -72,20 +73,30 @@ class Repository private constructor(applicationContext: Context):RepositoryI {
         }
     }
 
+    fun updateRemoteLists(toDoLists: List<ToDoList>) {
+        val myUserMail = sp.getMyUser().email
+        firebaseManager.getAllToDoLists().addOnSuccessListener {
+            print(it.documents)
+            for (doc in it.documents) {
+                if (doc.data != null) {
+                    val toDoList = doc.toObject(ToDoList::class.java)
+                    if (toDoLists.all { l -> l.title != toDoList!!.title })
+                        for (user in toDoList!!.participants.usersList) {
+                            if (user.email == myUserMail) {
+                                thread(start = true) {
+                                    toDoListDao.insertToDoList(toDoList)
+                                }
+                                break
+                            }
+                        }
+                }
+            }
+        }.addOnFailureListener {
+
+        }
+    }
+
     fun getLocalToDoLists(): LiveData<List<ToDoList>> {
-//        firebaseManager.getAllToDoLists().addOnSuccessListener {
-//            print(it.documents)
-//            for (doc in it.documents){
-//                if(doc.data!=null){
-//                    val toDoList = doc.toObject(ToDoList::class.java)
-//                    thread (start = true){
-//                        toDoListDao.insertToDoList(toDoList!!)
-//                    }
-//                }
-//            }
-//        }.addOnFailureListener {
-//
-//        }
         return toDoListDao.getAllToDoLists()
     }
 
