@@ -3,6 +3,8 @@ package com.ronyehezkel.helloworld.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -14,6 +16,7 @@ import com.ronyehezkel.helloworld.R
 import com.ronyehezkel.helloworld.ToDoListAdapter
 import com.ronyehezkel.helloworld.model.Repository
 import com.ronyehezkel.helloworld.model.ToDoList
+import com.ronyehezkel.helloworld.ui.comp.ProfileActivity
 import com.ronyehezkel.helloworld.viewmodel.ToDoListViewModel
 import kotlinx.android.synthetic.main.activity_to_do_list.*
 import kotlinx.coroutines.Dispatchers
@@ -37,6 +40,17 @@ class ToDoListActivity : AppCompatActivity() {
     override fun onStart() {
         object {}.javaClass.enclosingMethod?.name?.let { MyApp.lcLog(this, it) }
         super.onStart()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val i = Intent(this, ProfileActivity::class.java)
+        this.startActivity(i)
+        return true
     }
 
     private fun onToDoListClick(): (toDoList: ToDoList) -> Unit = {

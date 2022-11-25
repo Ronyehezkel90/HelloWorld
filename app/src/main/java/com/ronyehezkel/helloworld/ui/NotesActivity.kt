@@ -173,11 +173,6 @@ class NotesActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
     private fun displayAddUserAlertDialog() {
         val toDoListEditText = EditText(this)
         val alertDialogBuilder = AlertDialog.Builder(this)

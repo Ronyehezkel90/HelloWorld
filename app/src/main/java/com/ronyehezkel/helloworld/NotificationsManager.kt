@@ -10,14 +10,8 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.RemoteMessage
-import com.ronyehezkel.helloworld.model.ApiResponseHitsList
-import com.ronyehezkel.helloworld.model.IMAGE_TYPE
 import com.ronyehezkel.helloworld.model.Note
-import com.ronyehezkel.helloworld.ui.RegistrationActivity
-import com.squareup.okhttp.MediaType
-import com.squareup.okhttp.RequestBody
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.ronyehezkel.helloworld.ui.comp.CompRegistrationActivity
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -82,7 +76,7 @@ object NotificationsManager {
         val pendingIntent = PendingIntent.getActivity(
             context,
             0,
-            Intent(context, RegistrationActivity::class.java),
+            Intent(context, CompRegistrationActivity::class.java),
             0
         )
         return NotificationCompat.Builder(context, CHANNEL_ID)

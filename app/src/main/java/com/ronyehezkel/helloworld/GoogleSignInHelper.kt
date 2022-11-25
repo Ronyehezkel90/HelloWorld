@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -15,7 +16,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.ronyehezkel.helloworld.model.SpManager
 import com.ronyehezkel.helloworld.model.User
 
-class GoogleSignInHelper(val context: ComponentActivity, val onSuccessfulLogin: () -> Unit) {
+class GoogleSignInHelper(val context: ComponentActivity, val onSuccessfulLogin: () -> Unit,val onFailLogin: () -> Unit ) {
     val firebaseAuth = FirebaseAuth.getInstance()
 
     private val googleGetContent: ActivityResultLauncher<Intent> =
@@ -82,6 +83,8 @@ class GoogleSignInHelper(val context: ComponentActivity, val onSuccessfulLogin: 
         task.addOnSuccessListener {
             loginOrSignUpToFirebase(it)
         }.addOnFailureListener {
+            onFailLogin()
+//            isProcessingLiveData.value = false
             displayToast("If you can't use GoogleSignIn please sign in the regular way")
         }
     }
