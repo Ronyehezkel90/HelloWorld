@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import com.ronyehezkel.helloworld.GoogleSignInHelper
 import com.ronyehezkel.helloworld.R
 import com.ronyehezkel.helloworld.model.Repository
-import com.ronyehezkel.helloworld.ui.ToDoListActivity
 import com.ronyehezkel.helloworld.ui.comp.ui.theme.HelloWorldTheme
 
 class CompRegistrationActivity : GenericButtonActivity() {
@@ -28,7 +27,7 @@ class CompRegistrationActivity : GenericButtonActivity() {
     fun openToDoListActivity() {
         super.onComplete()
         Repository.getInstance(this).updateFcmToken()
-        val intent = Intent(this, ToDoListActivity::class.java)
+        val intent = Intent(this, CompToDoListActivity::class.java)
         startActivity(intent)
     }
 

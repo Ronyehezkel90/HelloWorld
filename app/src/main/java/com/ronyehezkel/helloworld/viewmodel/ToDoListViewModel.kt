@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.ronyehezkel.helloworld.model.*
+import kotlinx.coroutines.flow.Flow
 
 class ToDoListViewModel(val app: Application) : AndroidViewModel(app) {
     private val repository = Repository.getInstance(app.applicationContext)
@@ -16,5 +17,13 @@ class ToDoListViewModel(val app: Application) : AndroidViewModel(app) {
     fun updateLocalToDoLists() {
         repository.getPartOfToDoLists(countLetters)
         countLetters += 3
+    }
+
+    fun getRemoteToDoLists():List<ToDoList> {
+        TODO("Not yet implemented")
+    }
+
+    fun loadToDoLists(): Flow<FlowEvent> {
+        return repository.loadToDoLists()
     }
 }

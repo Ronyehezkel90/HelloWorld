@@ -15,6 +15,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HelloWorld">
         <activity
+            android:name=".ui.comp.CompToDoListActivity"
+            android:exported="false"
+            android:label="@string/title_activity_comp_to_do_list"
+            android:theme="@style/Theme.HelloWorld">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ui.comp.ProfileActivity"
             android:exported="false"
             android:label="@string/title_activity_profile"
@@ -38,9 +47,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity
-            android:name=".ui.ToDoListActivity"
-            android:exported="false" />
         <activity
             android:name=".ui.NotesActivity"
             android:exported="false"

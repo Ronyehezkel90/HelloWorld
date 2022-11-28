@@ -5,10 +5,15 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.StorageReference
 import com.ronyehezkel.helloworld.FirebaseManager
 import com.ronyehezkel.helloworld.NotificationsManager
 import com.ronyehezkel.helloworld.RepositoryI
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.tasks.await
 import kotlin.concurrent.thread
 
 class Repository private constructor(applicationContext: Context):RepositoryI {
@@ -143,7 +148,19 @@ class Repository private constructor(applicationContext: Context):RepositoryI {
             firebaseManager.updateUser(myUser)
         })
     }
-//    fun getUsersByToDoList(toDoList: ToDoList): LiveData<List<User>> {
-//        return toDoListDao.getToDoListUsers(toDoList.id)
-//    }
+
+    fun loadToDoLists() = flow<FlowEvent> {
+        val todoListLists = mutableListOf<ToDoList>()
+        emit(FlowEvent(Message.DONT_WORRY))
+
+        firebaseManager.getAllToDoLists().await().documents.onEach { doc->
+            doc.toObject(ToDoList::class.java)?.let{
+                todoListLists.add(it)
+            }
+        }
+        emit(FlowEvent(Message.SUCCESS, toDoList = todoListLists))
+    }.catch {
+        emit(FlowEvent(Message.FAIL, it.message))
+    }
+
 }
