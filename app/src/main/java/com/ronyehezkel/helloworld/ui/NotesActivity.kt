@@ -27,7 +27,10 @@ import kotlinx.coroutines.launch
 class NotesActivity : AppCompatActivity() {
 
     private val notesViewModel: NotesViewModel by viewModels() {
-        ViewModelFactory(FirebaseManager.getInstance(this), Repository.getInstance(this))
+        ViewModelFactory(FirebaseManager.getInstance(this),
+//            Repository.getInstance(this)
+            Repository(this)
+        )
     }
 
     private var chosenNote: Note? = null

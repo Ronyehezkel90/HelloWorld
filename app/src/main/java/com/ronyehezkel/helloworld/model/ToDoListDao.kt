@@ -1,6 +1,5 @@
 package com.ronyehezkel.helloworld.model
 
-import android.icu.text.CaseMap
 import androidx.lifecycle.LiveData
 import androidx.room.*
 
@@ -14,7 +13,10 @@ interface ToDoListDao {
     fun delete(toDoList: ToDoList)
 
     @Query("Select * from toDoListTable")
-    fun getAllToDoLists(): LiveData<List<ToDoList>>
+    fun getAllToDoListsLiveData(): LiveData<List<ToDoList>>
+
+    @Query("Select * from toDoListTable")
+    fun getAllToDoLists(): List<ToDoList>
 
     @Query("UPDATE toDoListTable SET notes=:notes WHERE title = :title")
     fun updateNotesList(title: String, notes: NotesList)

@@ -1,17 +1,15 @@
 package com.ronyehezkel.helloworld.viewmodel
 
-import android.app.Application
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.*
-import com.ronyehezkel.helloworld.FirebaseManager
-import com.ronyehezkel.helloworld.RepositoryI
-import com.ronyehezkel.helloworld.ServerManager
+import com.ronyehezkel.helloworld.IRepository
+import com.ronyehezkel.helloworld.IServerManager
 import com.ronyehezkel.helloworld.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class NotesViewModel(val serverManager: ServerManager, val repository: RepositoryI) : ViewModel() {
+class NotesViewModel(val serverManager: IServerManager, val repository: IRepository) : ViewModel() {
     val toDoListLiveData: MutableLiveData<ToDoList> = MutableLiveData()
 
     fun getNotesLiveData(toDoList: ToDoList): LiveData<NotesList> {

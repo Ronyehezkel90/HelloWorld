@@ -26,7 +26,7 @@ class CompRegistrationActivity : GenericButtonActivity() {
 
     fun openToDoListActivity() {
         super.onComplete()
-        Repository.getInstance(this).updateFcmToken()
+        Repository(this).updateFcmToken()
         val intent = Intent(this, CompToDoListActivity::class.java)
         startActivity(intent)
     }

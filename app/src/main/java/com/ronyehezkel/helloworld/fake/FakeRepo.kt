@@ -1,10 +1,11 @@
 package com.ronyehezkel.helloworld.fake
 
 import androidx.lifecycle.LiveData
-import com.ronyehezkel.helloworld.RepositoryI
+import com.ronyehezkel.helloworld.IRepository
 import com.ronyehezkel.helloworld.model.*
+import kotlinx.coroutines.flow.Flow
 
-class FakeRepo: RepositoryI {
+class FakeRepo: IRepository {
     override fun getNotesByToDoList(toDoList: ToDoList): LiveData<NotesList> {
         TODO("Not yet implemented")
     }
@@ -26,6 +27,26 @@ class FakeRepo: RepositoryI {
     }
 
     override fun getToDoListByTitle(toDoListTitle: String): ToDoList? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLocalToDoListsLiveData(): LiveData<List<ToDoList>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLocalToDoLists(): List<ToDoList> {
+        TODO("Not yet implemented")
+    }
+
+    override fun addToDoListToLocalStorage(toDoList: ToDoList) {
+        TODO("Not yet implemented")
+    }
+
+    override fun updateFcmToken() {
+        TODO("Not yet implemented")
+    }
+
+    override fun loadRemoteToDoLists(): Flow<FlowEvent> {
         TODO("Not yet implemented")
     }
 }

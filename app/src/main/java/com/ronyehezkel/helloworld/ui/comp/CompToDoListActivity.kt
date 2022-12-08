@@ -2,6 +2,7 @@ package com.ronyehezkel.helloworld.ui.comp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -25,20 +26,25 @@ import com.ronyehezkel.helloworld.model.ToDoList
 import com.ronyehezkel.helloworld.ui.NotesActivity
 import com.ronyehezkel.helloworld.ui.comp.ui.theme.HelloWorldTheme
 import com.ronyehezkel.helloworld.viewmodel.ToDoListViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class CompToDoListActivity : ComponentActivity() {
     private val toDoListViewModel: ToDoListViewModel by viewModels()
+//    private val toDoListViewModel: ToDoListViewModel(repo)
     private lateinit var repository: Repository
     val flowEventState = mutableStateOf(FlowEvent(Message.DONT_WORRY))
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        toDoListViewModel.viewModelScope.launch {
+        toDoListViewModel.viewModelScope.launch(Dispatchers.IO) {
             loadToDoLists()
         }
-        repository = Repository.getInstance(this)
+//        repository = Repository.getInstance(this)
+        repository = Repository(this)
         setContent {
             ToDoListActivityScreen(
                 flowEventState = flowEventState,
@@ -49,9 +55,7 @@ class CompToDoListActivity : ComponentActivity() {
 
     private suspend fun loadToDoLists() {
         toDoListViewModel.loadToDoLists().collect {
-            if(!it.toDoList.isNullOrEmpty()){
-                toDoListViewModel.updateLocalToDoLists()
-            }
+            Log.d("Hi im consumer 2 ", it.message.toString())
             flowEventState.value = it
         }
     }

@@ -3,27 +3,51 @@ package com.ronyehezkel.helloworld.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import com.ronyehezkel.helloworld.IRepository
 import com.ronyehezkel.helloworld.model.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class ToDoListViewModel(val app: Application) : AndroidViewModel(app) {
-    private val repository = Repository.getInstance(app.applicationContext)
+@HiltViewModel
+class ToDoListViewModel @Inject constructor(val repository: IRepository) : ViewModel() {
     private var countLetters = 0
 
     fun getAllToDoListsAsLiveData(): LiveData<List<ToDoList>> {
-        return repository.getLocalToDoLists()
+        return repository.getLocalToDoListsLiveData()
     }
 
-    fun updateLocalToDoLists() {
-        repository.getPartOfToDoLists(countLetters)
-        countLetters += 3
+    fun updateLocalToDoLists(remoteToDoListList: List<ToDoList>) {
+        if (!remoteToDoListList.isNullOrEmpty()) {
+            val localToDoList = repository.getLocalToDoLists()
+            remoteToDoListList.forEach { remoteToDoList ->
+                var isExist = false
+                localToDoList.forEach { localToDoList ->
+                    if (remoteToDoList.title == localToDoList.title) {
+                        isExist = true
+                    }
+                }
+                if (!isExist) {
+                    repository.addToDoListToLocalStorage(remoteToDoList)
+                }
+            }
+        }
     }
 
-    fun getRemoteToDoLists():List<ToDoList> {
-        TODO("Not yet implemented")
-    }
+    suspend fun loadToDoLists(): Flow<FlowEvent> {
+        val toDoListFlow = repository.loadRemoteToDoLists()
 
-    fun loadToDoLists(): Flow<FlowEvent> {
-        return repository.loadToDoLists()
+        toDoListFlow
+            .filter { it.message == Message.SUCCESS }
+            .map { it.toDoList}
+            .collect {
+                updateLocalToDoLists(it!!)
+//                Log.d("Hi im consumer 1 ", it)
+            }
+
+        return toDoListFlow
     }
 }

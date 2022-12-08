@@ -5,33 +5,22 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.StorageReference
-import com.ronyehezkel.helloworld.FirebaseManager
-import com.ronyehezkel.helloworld.NotificationsManager
-import com.ronyehezkel.helloworld.RepositoryI
-import kotlinx.coroutines.delay
+import com.ronyehezkel.helloworld.*
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 import kotlin.concurrent.thread
 
-class Repository private constructor(applicationContext: Context):RepositoryI {
+class Repository @Inject constructor(@ApplicationContext applicationContext: Context) : IRepository {
     //    private val notesDao = AppDatabase.getDatabase(applicationContext).getNotesDao()
     private val toDoListDao = AppDatabase.getDatabase(applicationContext).getToDoListDao()
     private val firebaseManager = FirebaseManager.getInstance(applicationContext)
     private val sp = SpManager.getInstance(applicationContext)
-
-    companion object {
-        private lateinit var instance: Repository
-
-        fun getInstance(context: Context): Repository {
-            if (!Companion::instance.isInitialized) {
-                instance = Repository(context)
-            }
-            return instance
-        }
-    }
 
     override fun addUserToToDoList(toDoList: ToDoList, user: User) {
         toDoList.participants.usersList.add(user)
@@ -101,13 +90,21 @@ class Repository private constructor(applicationContext: Context):RepositoryI {
         }
     }
 
-    fun getLocalToDoLists(): LiveData<List<ToDoList>> {
+    override fun getLocalToDoListsLiveData(): LiveData<List<ToDoList>> {
+        return toDoListDao.getAllToDoListsLiveData()
+    }
+
+    override fun getLocalToDoLists(): List<ToDoList> {
         return toDoListDao.getAllToDoLists()
     }
 
     override fun addToDoList(toDoList: ToDoList) {
         firebaseManager.updateToDoList(toDoList)
         return toDoListDao.insertToDoList(toDoList)
+    }
+
+    override fun addToDoListToLocalStorage(toDoList: ToDoList) {
+        toDoListDao.insertToDoList(toDoList)
     }
 
     override fun getNotesByToDoList(toDoList: ToDoList): LiveData<NotesList> {
@@ -136,7 +133,7 @@ class Repository private constructor(applicationContext: Context):RepositoryI {
         return firebaseManager.getUserProfileImageReference()
     }
 
-    fun updateFcmToken() {
+    override fun updateFcmToken() {
         val myUser = sp.getMyUser()
         firebaseManager.getFcmToken().addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
@@ -149,18 +146,18 @@ class Repository private constructor(applicationContext: Context):RepositoryI {
         })
     }
 
-    fun loadToDoLists() = flow<FlowEvent> {
+    override fun loadRemoteToDoLists() = flow<FlowEvent> {
         val todoListLists = mutableListOf<ToDoList>()
         emit(FlowEvent(Message.DONT_WORRY))
 
-        firebaseManager.getAllToDoLists().await().documents.onEach { doc->
-            doc.toObject(ToDoList::class.java)?.let{
+        firebaseManager.getAllToDoLists().await().documents.onEach { doc ->
+            doc.toObject(ToDoList::class.java)?.let {
                 todoListLists.add(it)
             }
         }
         emit(FlowEvent(Message.SUCCESS, toDoList = todoListLists))
     }.catch {
         emit(FlowEvent(Message.FAIL, it.message))
-    }
+    }.flowOn(Dispatchers.IO)
 
 }

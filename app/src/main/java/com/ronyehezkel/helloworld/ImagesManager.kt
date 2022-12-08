@@ -54,7 +54,8 @@ object ImagesManager {
                 it.imageType = imageType
             }
         }
-        Repository.getInstance(context).updateNoteImage(toDoList)
+//        Repository.getInstance(context).updateNoteImage(toDoList)
+        Repository(context).updateNoteImage(toDoList)
     }
 
     fun getImageFromApi(note: Note, context: Context, toDoList: ToDoList) {

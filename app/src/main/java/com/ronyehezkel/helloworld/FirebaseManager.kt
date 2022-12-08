@@ -1,12 +1,7 @@
 package com.ronyehezkel.helloworld
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.net.Uri
-import android.provider.Settings.Global.getString
-import android.util.Log
-import android.widget.Toast
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
@@ -16,11 +11,10 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
-import com.ronyehezkel.helloworld.model.SpManager
 import com.ronyehezkel.helloworld.model.ToDoList
 import com.ronyehezkel.helloworld.model.User
 
-class FirebaseManager private constructor(context: Context):ServerManager {
+class FirebaseManager constructor(context: Context):IServerManager {
     val db = Firebase.firestore
     val storage = FirebaseStorage.getInstance()
     val fcm = FirebaseMessaging.getInstance()
