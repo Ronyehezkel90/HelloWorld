@@ -10,7 +10,7 @@ class MyApp : Application() {
     companion object{
         fun lcLog(className:Any, funcName:String){
             Log.d(
-                "lifecycle",
+                "lifecycle - NOA",
                 "Class: ${className::class.java.name} Func: $funcName}"
             )
         }
